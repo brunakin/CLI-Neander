@@ -7,5 +7,7 @@
 #### Comandos:
 
 gcc -o neander main.c
+
 ./neander binarioNeander.mem -hex
+
 ./neander binarioNeander.mem -dec
