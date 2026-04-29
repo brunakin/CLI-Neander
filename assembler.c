@@ -21,7 +21,7 @@ static int tem_erro = 0;
 static int linha_erro = 0;
 static char texto_erro[256];
 
-/* Guarda só o primeiro erro encontrado */
+// Guarda só o primeiro erro encontrado
 static void registrar_erro(int linha, const char* msg) {
     if (tem_erro) return;
     tem_erro = 1;
@@ -29,13 +29,13 @@ static void registrar_erro(int linha, const char* msg) {
     snprintf(texto_erro, sizeof(texto_erro), "%s", msg);
 }
 
-/* Coloca a string em maiúsculo */
+// Coloca a string em maiúsculo 
 static void para_maiusculo(char* s) {
     if (!s) return;
     for (int i = 0; s[i]; i++) s[i] = (char)toupper((unsigned char)s[i]);
 }
 
-/* Remove comentários e remove \r\n do final */
+// Remove comentários e remove \r\n do final
 static void limpar_linha(char* linha) {
     if (!linha) return;
 
@@ -51,7 +51,7 @@ static void limpar_linha(char* linha) {
     }
 }
 
-/* Busca símbolo na tabela */
+// Busca símbolo na tabela 
 static int buscar_simbolo(const char* nome) {
     for (int i = 0; i < total_simbolos; i++) {
         if (strcmp(tabela[i].nome, nome) == 0) return (int)tabela[i].endereco;
@@ -59,7 +59,7 @@ static int buscar_simbolo(const char* nome) {
     return -1;
 }
 
-/* Adiciona símbolo novo */
+// Adiciona símbolo novo
 static void adicionar_simbolo(int linha, const char* nome, int endereco) {
     if (total_simbolos >= MAX_SIMBOLOS) {
         registrar_erro(linha, "Tabela de símbolos cheia");
@@ -75,7 +75,7 @@ static void adicionar_simbolo(int linha, const char* nome, int endereco) {
     total_simbolos++;
 }
 
-/* Retorna opcode e se usa operando (ISA do seu executor) */
+// Retorna opcode e se usa operando (ISA do seu executor) 
 static unsigned char obter_opcode(const char* inst, int* usa_operando) {
     *usa_operando = 0;
 
@@ -94,7 +94,7 @@ static unsigned char obter_opcode(const char* inst, int* usa_operando) {
     return 0xFF;
 }
 
-/* Lê número decimal ou 0x.. */
+// Lê número decimal ou 0x
 static int eh_numero(const char* s, long* valor) {
     if (!s) return 0;
     char* fim = NULL;
@@ -102,7 +102,6 @@ static int eh_numero(const char* s, long* valor) {
     return (fim && *fim == '\0');
 }
 
-/* Resolve operando (número ou rótulo) para 0..255 */
 static int resolver_operando(int linha, const char* op, int* end) {
     if (!op) {
         registrar_erro(linha, "Faltou operando na instrução");
@@ -134,7 +133,7 @@ static int resolver_operando(int linha, const char* op, int* end) {
     return 1;
 }
 
-/* ====================== PRIMEIRA PASSAGEM ====================== */
+// Primeira Passagem
 static void primeira_passagem(FILE* f) {
     char linha[TAM_LINHA];
     int pc = 0;
@@ -156,7 +155,7 @@ static void primeira_passagem(FILE* f) {
         char* t2 = strtok(NULL, " \t");
         char* t3 = strtok(NULL, " \t");
 
-        /* Tratamento de rótulo com ':' */
+        // Tratamento de rótulo com ':'
         if (t1[strlen(t1) - 1] == ':') {
             t1[strlen(t1) - 1] = '\0';
             para_maiusculo(t1);
@@ -170,10 +169,10 @@ static void primeira_passagem(FILE* f) {
         para_maiusculo(t1);
         if (t2) para_maiusculo(t2);
 
-        /* Tratamento de rótulo sem ':' seguido de DATA ou SPACE */
+        // Tratamento de rótulo sem ':' seguido de DATA ou SPACE 
         if (t2 && (strcmp(t2, "DATA") == 0 || strcmp(t2, "SPACE") == 0)) {
-            adicionar_simbolo(num_linha, t1, pc); /* t1 era o rótulo */
-            t1 = t2;                              /* agora t1 é a diretiva */
+            adicionar_simbolo(num_linha, t1, pc); 
+            t1 = t2;                            
             t2 = t3;
             t3 = strtok(NULL, " \t");
             if (t2) para_maiusculo(t2);
@@ -204,7 +203,7 @@ static void primeira_passagem(FILE* f) {
             continue;
         }
 
-        /* Instrução comum */
+        // Instrução comum
         {
             int usa_op = 0;
             unsigned char op = obter_opcode(t1, &usa_op);
@@ -226,7 +225,7 @@ static void primeira_passagem(FILE* f) {
     }
 }
 
-/* ====================== SEGUNDA PASSAGEM ====================== */
+// Segunda Passagem
 static void segunda_passagem(FILE* f, unsigned char mem[256]) {
     char linha[TAM_LINHA];
     int pc = 0;
@@ -283,7 +282,6 @@ static void segunda_passagem(FILE* f, unsigned char mem[256]) {
             continue;
         }
 
-        /* Instrução */
         {
             int usa_op = 0;
             unsigned char op = obter_opcode(t1, &usa_op);
@@ -301,7 +299,7 @@ static void segunda_passagem(FILE* f, unsigned char mem[256]) {
     }
 }
 
-/* ====================== SALVAR ARQUIVO ====================== */
+// Salvar Arquivo
 static int salvar_mem(const char* nome, const unsigned char mem[256]) {
     FILE* out = fopen(nome, "wb");
     if (!out) return 0;
@@ -322,7 +320,7 @@ int montar_arquivo(const char* caminho_asm,
                    const char* caminho_mem,
                    char* msg_erro,
                    size_t tam_msg_erro) {
-    /* Função principal */
+ 
     if (!msg_erro || tam_msg_erro == 0) return 0;
     msg_erro[0] = '\0';
 

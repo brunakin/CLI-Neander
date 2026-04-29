@@ -4,8 +4,8 @@
 #include <string.h>
 
 int main(int argc, char** argv) {
-    char buf[512];          /* buffer pra ler do teclado */
-    const char* src = NULL; /* aponta pra expressão que vamos analisar */
+    char buf[512];          // buffer pra ler do teclado 
+    const char* src = NULL; // aponta pra expressão que vamos analisar 
 
     if (argc >= 2) {
         src = argv[1];

@@ -3,14 +3,13 @@
 
 #include <stddef.h>
 
-/*
-Parser simples de expressões matemáticas.
+// Parser simples de expressões matemáticas.
 
-Gramática (EBNF):
-  expressao = termo { ("+" | "-") termo } ;
-  termo     = fator { ("*" | "/") fator } ;
-  fator     = NUM | "(" expressao ")" | ("+" | "-") fator ;
-*/
+// Gramática (EBNF):
+//   expressao = termo { ("+" | "-") termo } ;
+//   termo     = fator { ("*" | "/") fator } ;
+//   fator     = NUM | "(" expressao ")" | ("+" | "-") fator ;
+
 
 int analisar_expressao(const char* entrada,
                        long* resultado,

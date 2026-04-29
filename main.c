@@ -149,24 +149,24 @@ int executar_instrucao() {
     return 1;
 }
 
-int main(int argc, char* argv[]) {
-    if (argc < 3) {
-        printf("Uso: %s <arquivo.mem> <-dec|-hex> [-step]\n", argv[0]);
-        printf("Ex: %s programa.mem -hex -step\n", argv[0]);
-        return 1;
-    }
+// ====================== FUNÇÕES PARA USO NO FLUXO COMPLETO ======================
 
-    int usar_hex = 0;
+void inicializar_executor(void) {
+    AC = 0;
+    PC = 0;
+    IR = 0;
+    MAR = 0;
+    MDR = 0;
+    flagZ = 0;
+    flagN = 0;
+    acessos = 0;
+    instrucoes = 0;
     modo_step = 0;
+}
 
-    // Processa argumentos
-    for (int i = 2; i < argc; i++) {
-        if (strcmp(argv[i], "-hex") == 0) usar_hex = 1;
-        else if (strcmp(argv[i], "-dec") == 0) usar_hex = 0;
-        else if (strcmp(argv[i], "-step") == 0) modo_step = 1;
-    }
-
-    carregar_binario(argv[1]);
+void executar_programa(const char* arquivo_mem, int usar_hex, int step) {
+    modo_step = step;
+    carregar_binario(arquivo_mem);
 
     uint8_t memoria_antes[256];
     memcpy(memoria_antes, memoria, 256);
@@ -181,7 +181,7 @@ int main(int argc, char* argv[]) {
         while (executar_instrucao()) {
             imprimir_estado(usar_hex);
             printf("----------------------------------------\n");
-            getchar();  // aguarda pressionar ENTER
+            getchar();
         }
     } else {
         while (executar_instrucao()) {
@@ -194,6 +194,27 @@ int main(int argc, char* argv[]) {
 
     printf("\n=== MAPA DE MEMORIA APOS EXECUCAO ===\n");
     imprimir_memoria(memoria, usar_hex);
-
-    return 0;
 }
+
+// Main de antes
+// int main(int argc, char* argv[]) {
+//     if (argc < 3) {
+//         printf("Uso: %s <arquivo.mem> <-dec|-hex> [-step]\n", argv[0]);
+//         printf("Ex: %s programa.mem -hex -step\n", argv[0]);
+//         return 1;
+//     }
+
+//     int usar_hex = 0;
+//     modo_step = 0;
+
+//     for (int i = 2; i < argc; i++) {
+//         if (strcmp(argv[i], "-hex") == 0) usar_hex = 1;
+//         else if (strcmp(argv[i], "-dec") == 0) usar_hex = 0;
+//         else if (strcmp(argv[i], "-step") == 0) modo_step = 1;
+//     }
+
+//     inicializar_executor();
+//     executar_programa(argv[1], usar_hex, modo_step);
+
+//     return 0;
+// }

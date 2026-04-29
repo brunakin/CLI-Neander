@@ -1,9 +1,9 @@
-#include "assembler.h" /* montar_arquivo */
+#include "assembler.h"
 
-#include <stdio.h>  /* printf */
+#include <stdio.h> 
 
 int main(int argc, char** argv) {
-    /* CLI simples: monta um .asm e gera um .mem */
+    
     if (argc < 3) {
         printf("Uso: %s <entrada.asm> <saida.mem>\n", argv[0]);
         return 1;
